@@ -49,3 +49,66 @@ Todo funcionando localmente
 
 **Output**: Functional implementation of the undercoverparties repository running locally. 
 
+---
+## Layered Design
+* The Django monolith is based on a layered architecture
+* **Business Logic layer**: Takes care of data type validations, capacity checks, and party management rules
+* **Repositories layer**: Takes care of communication between the application and SQLite
+* **Model layer**: Defines the structure of Party and Invitation entities
+* Clear separation between Django views (presentation) and core logic layers
+
+---
+
+## Scripts
+* `scripts/run_server.ps1` / `scripts/run_server.sh`: Starts main Django server on port 8000 (shared backend)
+* `scripts/run_frontend_invitados.ps1` / `scripts/run_frontend_invitados.sh`: Starts invitation management interface on port 8001
+* `scripts/run_frontend_localizacion.ps1` / `scripts/run_frontend_localizacion.sh`: Starts party discovery interface on port 8002
+* `scripts/setup_db.ps1` / `scripts/setup_db.sh`: Initializes SQLite database and runs seed
+* `scripts/seed_data.py`: Populates database with sample party and invitation data
+* Each bundle runs independently with its own Django instance
+
+---
+
+## Quickstart (Local)
+
+### 1) Python env + install dependencies
+
+From the repo root `UndercoverParties/`:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r backend\requirements.txt
+```
+
+### 2) Setup SQLite + seed sample data
+
+```powershell
+./scripts/setup_db.ps1
+```
+
+Note: the seed runs with `--reset` (it deletes all existing `Party` and `Invitation` rows).
+
+### 3) Run bundles (3 independent servers)
+
+```powershell
+./scripts/run_server.ps1               # http://127.0.0.1:8000
+./scripts/run_frontend_invitados.ps1   # http://127.0.0.1:8001
+./scripts/run_frontend_localizacion.ps1# http://127.0.0.1:8002
+```
+
+Main URLs:
+- `GET /crear-fiesta` (form)
+- `POST /fiestas` (create)
+- `GET /fiestas` (list)
+- `GET /invitados?usuario=alice` (invitation UI)
+- `POST /invitaciones/<id>/aceptar` (accept)
+- `GET /localizacion` (map)
+
+---
+## Paradigm
+* **Imperative**: Explicit step-by-step execution
+* Request flow: receive form submission → validate data → query/insert to database → render response
+* Clear separation between HTTP handling, business rules, and persistence
+* Side effects (SQLite read/write) isolated in repositories layer
+* Models define entity structure and validation constraints
