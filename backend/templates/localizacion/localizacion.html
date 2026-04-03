@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Localización{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h2 class="h2">Localización de fiestas</h2>
+    <p class="kicker">Frontend de localización (bundle independiente en puerto 8002). Mapa Leaflet via CDN.</p>
+
+    <div class="map" id="map"></div>
+  </section>
+
+  {{ parties_data|json_script:"parties-data" }}
+
+  <section class="card">
+    <div class="split">
+      <div>
+        <div style="font-weight:700;">Listado</div>
+        <div class="muted">Click en un pin para ver detalles.</div>
+      </div>
+      <a class="btn" href="/fiestas">Ver fiestas</a>
+    </div>
+
+    <div class="stack" style="margin-top: 10px;">
+      {% for party in parties %}
+        <div class="notice">
+          <div>
+            <div><b>{{ party.nombre }}</b></div>
+            <div class="muted">{{ party.ubicacion }} · ({{ party.ubicacion_lat }}, {{ party.ubicacion_lng }})</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const mapEl = document.getElementById('map');
+      const dataEl = document.getElementById('parties-data');
+      const parties = dataEl ? JSON.parse(dataEl.textContent) : [];
+
+      if (!mapEl) return;
+
+      if (!window.L) {
+        mapEl.innerHTML = '<div class="notice error">No se pudo cargar Leaflet (revisa conexión a internet o bloqueos a unpkg.com).</div>';
+        return;
+      }
+
+      const center = { lat: 9.9281, lng: -84.0907 }; // San José default
+      const map = L.map('map').setView([center.lat, center.lng], 10);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        crossOrigin: true,
+        referrerPolicy: 'origin',
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+
+      const bounds = [];
+      for (const p of parties) {
+        const lat = Number(p.lat);
+        const lng = Number(p.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+        const marker = L.marker([lat, lng]).addTo(map);
+        marker.bindPopup(`<b>${p.nombre}</b><br/>${p.ubicacion}<br/>Capacidad: ${p.capacidad}<br/>Fecha: ${p.fecha}`);
+        bounds.push([lat, lng]);
+      }
+
+      if (bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [18, 18] });
+      }
+    });
+  </script>
+{% endblock %}

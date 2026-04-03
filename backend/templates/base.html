@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    {% load static %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}UndercoverParties{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'app.css' %}" />
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="brand">
+          <h1>UndercoverParties</h1>
+          <p class="tagline">Fiestas clandestinas — publicar, invitar, ubicar</p>
+        </div>
+        <nav class="nav" aria-label="Navegación">
+          <a href="/fiestas" {% if request.path == '/fiestas' %}aria-current="page"{% endif %}>Fiestas</a>
+          <a href="/crear-fiesta" {% if request.path == '/crear-fiesta' %}aria-current="page"{% endif %}>Crear</a>
+          <a href="/invitados" {% if request.path == '/invitados' %}aria-current="page"{% endif %}>Invitados</a>
+          <a href="/localizacion" {% if request.path == '/localizacion' %}aria-current="page"{% endif %}>Localización</a>
+        </nav>
+      </header>
+
+      <div class="main stack">
+        {% if messages %}
+          <section class="stack">
+            {% for message in messages %}
+              <div class="notice {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+          </section>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>

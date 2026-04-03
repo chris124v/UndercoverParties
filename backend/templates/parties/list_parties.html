@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Fiestas{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <div class="split">
+      <h2 class="h2" style="margin:0;">Fiestas disponibles</h2>
+      <a class="btn primary" href="/crear-fiesta">Nueva fiesta</a>
+    </div>
+
+    <form method="get" action="/fiestas" style="margin-top: 12px;">
+      <div class="grid">
+        <div class="col-4">
+          <label>Ubicación contiene</label>
+          <input name="ubicacion" value="{{ filters.ubicacion_contains|default:'' }}" placeholder="Casa, finca, barrio..." />
+        </div>
+        <div class="col-4">
+          <label>Capacidad mínima</label>
+          <input name="capacidad_min" type="number" min="1" value="{{ filters.capacidad_min|default:'' }}" />
+        </div>
+        <div class="col-4">
+          <label>Fecha desde (ISO)</label>
+          <input name="fecha_desde" value="{{ request.GET.fecha_desde|default:'' }}" placeholder="2026-04-02T18:00:00" />
+        </div>
+        <div class="col-4">
+          <label>Fecha hasta (ISO)</label>
+          <input name="fecha_hasta" value="{{ request.GET.fecha_hasta|default:'' }}" placeholder="2026-04-03T02:00:00" />
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">Aplicar filtros</button>
+        <a class="btn" href="/fiestas">Limpiar</a>
+      </div>
+    </form>
+  </section>
+
+  {% if parties|length == 0 %}
+    <div class="notice">
+      <div>
+        <div><b>Sin fiestas todavía</b></div>
+        <div class="muted">Creá la primera en <a href="/crear-fiesta">/crear-fiesta</a> o corré el seed.</div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% for party in parties %}
+    <section class="card">
+      <div class="split">
+        <div>
+          <div style="font-size: 16px; font-weight: 700;">{{ party.nombre }}</div>
+          <div class="muted">{{ party.ubicacion }} · ({{ party.ubicacion_lat }}, {{ party.ubicacion_lng }})</div>
+          <div class="muted">Anfitrión: {{ party.anfitrion }} · Fecha: {{ party.fecha }}</div>
+        </div>
+        <div class="actions" style="margin:0; justify-content:flex-end;">
+          <span class="badge wait">Capacidad: {{ party.capacidad }}</span>
+          <a class="btn" href="/fiestas/{{ party.id }}/invitados">Invitados</a>
+          <a class="btn" href="/localizacion">Mapa</a>
+        </div>
+      </div>
+    </section>
+  {% endfor %}
+{% endblock %}

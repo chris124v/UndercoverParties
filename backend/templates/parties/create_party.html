@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Crear fiesta{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h2 class="h2">Crear fiesta</h2>
+    <p class="kicker">Formulario SSR que hace <span class="code">POST /fiestas</span> (form-data, no JSON).</p>
+
+    <form method="post" action="/fiestas">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="notice error">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="grid">
+        <div class="col-6">
+          <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
+          {{ form.nombre }}
+          {% if form.nombre.errors %}<div class="notice error">{{ form.nombre.errors }}</div>{% endif %}
+        </div>
+        <div class="col-6">
+          <label for="{{ form.anfitrion.id_for_label }}">{{ form.anfitrion.label }}</label>
+          {{ form.anfitrion }}
+          {% if form.anfitrion.errors %}<div class="notice error">{{ form.anfitrion.errors }}</div>{% endif %}
+        </div>
+
+        <div class="col-12">
+          <label for="{{ form.ubicacion.id_for_label }}">{{ form.ubicacion.label }}</label>
+          {{ form.ubicacion }}
+          {% if form.ubicacion.errors %}<div class="notice error">{{ form.ubicacion.errors }}</div>{% endif %}
+        </div>
+
+        <div class="col-4">
+          <label for="{{ form.ubicacion_lat.id_for_label }}">{{ form.ubicacion_lat.label }}</label>
+          {{ form.ubicacion_lat }}
+          {% if form.ubicacion_lat.errors %}<div class="notice error">{{ form.ubicacion_lat.errors }}</div>{% endif %}
+        </div>
+        <div class="col-4">
+          <label for="{{ form.ubicacion_lng.id_for_label }}">{{ form.ubicacion_lng.label }}</label>
+          {{ form.ubicacion_lng }}
+          {% if form.ubicacion_lng.errors %}<div class="notice error">{{ form.ubicacion_lng.errors }}</div>{% endif %}
+        </div>
+        <div class="col-4">
+          <label for="{{ form.capacidad.id_for_label }}">{{ form.capacidad.label }}</label>
+          {{ form.capacidad }}
+          {% if form.capacidad.errors %}<div class="notice error">{{ form.capacidad.errors }}</div>{% endif %}
+        </div>
+
+        <div class="col-6">
+          <label for="{{ form.fecha.id_for_label }}">{{ form.fecha.label }}</label>
+          {{ form.fecha }}
+          {% if form.fecha.errors %}<div class="notice error">{{ form.fecha.errors }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" type="submit">Crear fiesta</button>
+        <a class="btn" href="/fiestas">Ver fiestas</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}

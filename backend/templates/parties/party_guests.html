@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Invitados — {{ party.nombre }}{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <div class="split">
+      <div>
+        <h2 class="h2" style="margin:0;">Invitados — {{ party.nombre }}</h2>
+        <div class="muted">Anfitrión: {{ party.anfitrion }} · Fecha: {{ party.fecha }}</div>
+      </div>
+      <span class="badge wait">Capacidad: {{ party.capacidad }}</span>
+    </div>
+
+    {% if invitations|length == 0 %}
+      <div class="notice" style="margin-top: 12px;">
+        <div>
+          <div><b>Sin invitaciones</b></div>
+          <div class="muted">Probá correr el seed para datos de ejemplo.</div>
+        </div>
+      </div>
+    {% else %}
+      <table class="table" style="margin-top: 12px;">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for inv in invitations %}
+            <tr>
+              <td>{{ inv.usuario }}</td>
+              <td>
+                {% if inv.estado == 'ACEPTADA' %}
+                  <span class="badge ok">ACEPTADA</span>
+                {% elif inv.estado == 'RECHAZADA' %}
+                  <span class="badge no">RECHAZADA</span>
+                {% else %}
+                  <span class="badge wait">PENDIENTE</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if inv.estado == 'PENDIENTE' %}
+                  <form method="post" action="/invitaciones/{{ inv.id }}/aceptar" style="display:inline;">
+                    {% csrf_token %}
+                    <button class="btn primary" type="submit">Aceptar</button>
+                  </form>
+                  <form method="post" action="/invitaciones/{{ inv.id }}/rechazar" style="display:inline; margin-left: 8px;">
+                    {% csrf_token %}
+                    <button class="btn danger" type="submit">Rechazar</button>
+                  </form>
+                {% else %}
+                  <span class="muted">—</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+    <div class="actions">
+      <a class="btn" href="/fiestas">← Volver a fiestas</a>
+      <a class="btn" href="/localizacion">Ver mapa</a>
+    </div>
+  </section>
+{% endblock %}

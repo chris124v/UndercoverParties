@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Invitados{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h2 class="h2">Invitaciones</h2>
+    <p class="kicker">Frontend de invitados (bundle independiente en puerto 8001).</p>
+
+    <form method="get" action="/invitados">
+      <div class="grid">
+        <div class="col-6">
+          <label>Usuario</label>
+          <input name="usuario" value="{{ usuario }}" placeholder="alice" />
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">Ver invitaciones</button>
+        <a class="btn" href="/fiestas">Ver fiestas</a>
+      </div>
+    </form>
+  </section>
+
+  {% if invitations|length == 0 %}
+    <div class="notice">
+      <div>
+        <div><b>Sin invitaciones</b></div>
+        <div class="muted">No hay invitaciones para <span class="code">{{ usuario }}</span>. Corré el seed para ver datos.</div>
+      </div>
+    </div>
+  {% else %}
+    <section class="card">
+      <table class="table">
+      <thead>
+        <tr>
+          <th>Fiesta</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in invitations %}
+          <tr>
+            <td>{{ inv.party.nombre }}</td>
+            <td>{{ inv.party.fecha }}</td>
+            <td>
+              {% if inv.estado == 'ACEPTADA' %}
+                <span class="badge ok">ACEPTADA</span>
+              {% elif inv.estado == 'RECHAZADA' %}
+                <span class="badge no">RECHAZADA</span>
+              {% else %}
+                <span class="badge wait">PENDIENTE</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if inv.estado == 'PENDIENTE' %}
+                <form method="post" action="/invitaciones/{{ inv.id }}/aceptar" style="display:inline;">
+                  {% csrf_token %}
+                  <button class="btn primary" type="submit">Aceptar</button>
+                </form>
+                <form method="post" action="/invitaciones/{{ inv.id }}/rechazar" style="display:inline; margin-left: 8px;">
+                  {% csrf_token %}
+                  <button class="btn danger" type="submit">Rechazar</button>
+                </form>
+              {% else %}
+                <span class="muted">—</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+    </section>
+  {% endif %}
+{% endblock %}
