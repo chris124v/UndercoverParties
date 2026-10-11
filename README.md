@@ -1,7 +1,20 @@
-# UndercoverParties
-The project consists of a Django monolith for managing underground parties, where users can publish parties at houses or farms, accept guests, and consult locations through a server-side rendered application with logical component separation. This are undercover parties wherever you are whenever you want.
+<h1 align="center">UndercoverParties</h1>
 
-It will execute entirely locally with SQLite and independent executable bundles.
+<p align="center">
+  The project consists of a Django monolith for managing underground parties, where users can publish parties at houses or farms, accept guests, and consult locations through a server-side rendered application with logical component separation. This are undercover parties wherever you are whenever you want.
+</p>
+
+<p align="center">
+  It will execute entirely locally with SQLite and independent executable bundles.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/PYTHON-3-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/DJANGO-5-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django 5">
+  <img src="https://img.shields.io/badge/SQLITE-LOCAL-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+  <img src="https://img.shields.io/badge/LEAFLET-1.9.4-199900?style=for-the-badge&logo=leaflet&logoColor=white" alt="Leaflet 1.9.4">
+  <img src="https://img.shields.io/badge/OPENSTREETMAP-MAPS-7EBC6F?style=for-the-badge&logo=openstreetmap&logoColor=white" alt="OpenStreetMap">
+</p>
 
 ## Authors
  * Isaac Villalobos Bonilla, 2024124285
